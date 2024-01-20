@@ -25,3 +25,7 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+.prose p:first-child {
+  margin-top: 0;
+}
