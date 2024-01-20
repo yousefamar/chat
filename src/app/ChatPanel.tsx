@@ -98,7 +98,7 @@ export default function ChatPanel() {
   };
 
   const handleEnter = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey && !isLoading) {
       e.preventDefault();
       sendMessage();
     }
@@ -133,11 +133,11 @@ export default function ChatPanel() {
       <textarea
         ref={inputRef}
         placeholder="Type here"
-        className={`textarea resize-none textarea-bordered w-full overflow-hidden h-12 ${isLoading && 'input-disabled'}`}
+        className={`textarea resize-none textarea-bordered w-full overflow-hidden h-12`}
         value={inputValue}
         onChange={handleInputChange}
         onKeyPress={handleEnter}
-        disabled={isLoading} />
+        />
       {isLoading ? (
         <button className="btn btn-error" onClick={() => setIsLoading(false)}><IoStop /></button>
       ) : (
