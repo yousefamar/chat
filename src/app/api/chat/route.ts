@@ -52,11 +52,12 @@ export async function POST(request: Request) {
     embeddingKey: "embedding",
   });
 
-  const retriever = vectorStore.asRetriever(3);
+  const retriever = vectorStore.asRetriever();
 
   const model = new ChatOpenAI({
     modelName: "gpt-4-1106-preview",
     streaming: true,
+    maxTokens: -1,
   });
 
   type QuestionCondenserInput = {
