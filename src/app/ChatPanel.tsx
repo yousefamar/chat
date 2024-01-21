@@ -88,7 +88,7 @@ export default function ChatPanel() {
         });
         scrollToBottom();
       }
-      console.log('Success:', responseText);
+      // console.log('Success:', responseText);
     } catch (error) {
       console.error('Error:', error);
     } finally {
