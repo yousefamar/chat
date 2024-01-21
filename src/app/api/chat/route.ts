@@ -2,6 +2,7 @@
 import { ChatOpenAI } from "@langchain/openai";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { StringOutputParser } from "@langchain/core/output_parsers";
+import { StreamingTextResponse } from 'ai';
 
 export const dynamic = 'force-dynamic';
 export async function POST(request: Request) {
@@ -23,18 +24,5 @@ export async function POST(request: Request) {
 
   const encoder = new TextEncoder();
 
-  return new Response(
-    new ReadableStream({
-      async start(controller) {
-        for await (const fragment of response) {
-          console.log(fragment);
-          controller.enqueue(encoder.encode(fragment));
-        }
-        controller.close();
-      },
-    }),
-    {
-      headers: { "content-type": "text/plain; charset=utf-8" },
-    }
-  );
+  return new StreamingTextResponse(response);
 }
