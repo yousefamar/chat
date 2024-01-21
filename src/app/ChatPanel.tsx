@@ -8,11 +8,11 @@ interface Message {
   sender: 'user' | 'bot';
 }
 
-export async function* chat(message: string) {
+export async function* chat(message: string, history?: string[]) {
   const res = await fetch('/api/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message }),
+    body: JSON.stringify({ message, history }),
   });
 
   if (!res.body) throw new Error("ReadableStream not yet supported in this browser.");
@@ -77,7 +77,7 @@ export default function ChatPanel() {
 
     try {
       let responseText = '';
-      for await (const fragment of chat(newMessage.text)) {
+      for await (const fragment of chat(newMessage.text, messages.map(m => m.text))) {
         responseText += fragment;
         // Update the latest 'bot' message with the new fragment
         setMessages(prevMessages => {
