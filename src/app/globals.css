@@ -8,3 +8,44 @@ body {
 .prose p:first-child {
   margin-top: 0;
 }
+
+.formkit-form[data-uid="50a6261ec3"] .formkit-powered-by-convertkit-container {
+  display: none !important;
+}
+
+.formkit-form[data-uid="50a6261ec3"] {
+  max-width: 100% !important;
+}
+
+.formkit-form[data-uid="50a6261ec3"][min-width~="700"] [data-style="clean"],
+.formkit-form[data-uid="50a6261ec3"][min-width~="800"] [data-style="clean"] {
+  padding: 0 !important;
+}
+
+.formkit-form[data-uid="50a6261ec3"] .formkit-input {
+  background-color: #1e3937 !important;
+}
+
+.formkit-form[data-uid="50a6261ec3"] .formkit-input::placeholder {
+  color: #eef0f2 !important;
+}
+
+.formkit-form[data-uid="50a6261ec3"] ul:not([template-default]) {
+  color: #ea4110 !important;
+}
+
+.formkit-form[data-uid="50a6261ec3"] .formkit-fields {
+  flex-wrap: nowrap !important;
+  flex-direction: column !important;
+}
+
+.formkit-form[data-uid="50a6261ec3"] .formkit-field {
+  flex: 1 !important;
+}
+
+.formkit-form[data-uid="50a6261ec3"] .formkit-submit {
+  flex: 1 !important;
+  flex-shrink: 1 !important;
+  width: 50% !important;
+  margin: 0 auto !important;
+}
