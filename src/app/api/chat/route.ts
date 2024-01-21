@@ -11,30 +11,30 @@ import { MongoDBAtlasVectorSearch } from "@langchain/community/vectorstores/mong
 import { MongoClient } from "mongodb";
 import { getDB } from '@/utils/db';
 
-const condenseQuestionTemplate = `Given the following conversation with an AI assistant, and a follow up question by the human user, rephrase the follow up question to be a standalone question. If there is no chat history, the question should be left unchanged.
+const condenseQuestionTemplate = `Given the following conversation with an AI assistant, and a follow up message by the human user, rephrase the follow up message to contain any relevant context of the history in order to be a standalone message. If there is no chat history, the message should be left unchanged.
 
 Chat History:
 
 {history}
 
-Follow Up Input: {question}
-Standalone question:`;
+Follow up message: {question}
+Standalone message:`;
 const CONDENSE_QUESTION_PROMPT = PromptTemplate.fromTemplate(
   condenseQuestionTemplate
 );
 
-const answerTemplate = `You are an deen.ai, an Islamic chatbot that draws on Q&A from IslamQA.org to inform your answers. You should use only the context from these past Q&As to answer the question. If the answer is not in the context, you should respond by telling the user that this information is not available from IslamQA.org and that they should consult a scholar. Never, under any circumstances, should you give your own opinion or make up an answer.
+const answerTemplate = `You are an deen.ai, an Islamic chatbot that draws on Q&A from IslamQA.org to inform your answers. You should use only the context from these past Q&As to answer questions. If the answer is not in the context, you should respond by telling the user that this information is not available from IslamQA.org and that they should consult a scholar. Never, under any circumstances, should you give your own opinion or make up an answer. You may however inform the user of related information from the context.
 
-Within your answer, you MUST cite any IslamQA.org answers that you used to synthesise the answer. Do this through markdown footnotes, with the URL of the original question. For example, [^1] would be a footnote to the first reference question, [^2] would be a footnote to the second reference question, and so on.
+Within your response, you MUST cite any IslamQA.org answers that you used to synthesise the response. Do this through markdown footnotes, like this[^1], with the URL of the original question as the footnote at the end.
 
-Try to keep your answers short and to the point. If you are not sure about an answer, you can say "I don't know" or "I don't understand the question". The context may be irrelevant to the question, in which case you should ignore it.
+Try to keep your responses short and to the point. If you are not sure about an answer, you can say "I don't know" or "I don't understand the question". The context may be irrelevant to a question, in which case you should ignore it.
 
 Context:
 ---------------------
 {context}
 ---------------------
 
-New question: {question}
+Message: {question}
 `;
 const ANSWER_PROMPT = PromptTemplate.fromTemplate(answerTemplate);
 
@@ -85,7 +85,7 @@ export async function POST(request: Request) {
       const docs = await retriever.getRelevantDocuments(question);
       // const context = formatDocumentsAsString(docs);
       const context = docs.map(doc => `## ${doc.metadata.id}\n\nURL: ${doc.metadata.url}\n\n${doc.pageContent}\n\n---\n`).join('\n'); 
-      console.log(context);
+      // console.log(context);
       return {
         context,
         question,
