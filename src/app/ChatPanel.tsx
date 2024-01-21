@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, KeyboardEvent } from 'react';
 import { IoSend, IoStop } from "react-icons/io5";
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm'
 
 interface Message {
   text: string;
@@ -119,7 +120,7 @@ export default function ChatPanel() {
           </div>
         </div>
         <div className="prose">
-          <ReactMarkdown className="message-text text-wrap">{message.text}</ReactMarkdown>
+          <ReactMarkdown remarkPlugins={[remarkGfm]} className="message-text text-wrap">{message.text}</ReactMarkdown>
         </div> 
       </div>)}
       {isLoading && <div className="flex items-center gap-2">
