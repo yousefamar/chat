@@ -102,8 +102,11 @@ export async function POST(request: Request) {
     model,
   ]);
 
+  const outputParser = new StringOutputParser();
+
   const conversationalRetrievalQAChain =
-    standaloneQuestionChain.pipe(answerChain);
+    standaloneQuestionChain.pipe(answerChain).
+    pipe(outputParser);
 
   const response = await conversationalRetrievalQAChain.stream({
     question: message,
