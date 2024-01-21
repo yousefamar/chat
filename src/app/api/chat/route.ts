@@ -10,6 +10,7 @@ import { StringOutputParser } from "@langchain/core/output_parsers";
 import { MongoDBAtlasVectorSearch } from "@langchain/community/vectorstores/mongodb_atlas";
 import { MongoClient } from "mongodb";
 import { getDB } from '@/utils/db';
+import { StreamingTextResponse } from 'ai';
 
 const condenseQuestionTemplate = `Given the following conversation with an AI assistant, and a follow up message by the human user, rephrase the follow up message to contain any relevant context of the history in order to be a standalone message. If there is no chat history, the message should be left unchanged.
 
@@ -109,19 +110,5 @@ export async function POST(request: Request) {
     history,
   });
 
-  const encoder = new TextEncoder();
-
-  return new Response(
-    new ReadableStream({
-      async start(controller) {
-        for await (const fragment of response) {
-          controller.enqueue(encoder.encode(fragment.content.toString()));
-        }
-        controller.close();
-      },
-    }),
-    {
-      headers: { "content-type": "text/plain; charset=utf-8" },
-    }
-  );
+  return new StreamingTextResponse(response);
 }
