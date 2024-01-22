@@ -9,11 +9,12 @@ interface Message {
   sender: 'user' | 'bot';
 }
 
-export async function* chat(message: string, history?: string[]) {
+export async function* chat(message: string, history?: string[], signal?: AbortSignal) {
   const res = await fetch('/api/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ message, history }),
+    signal,
   });
 
   if (!res.body) throw new Error("ReadableStream not yet supported in this browser.");
@@ -36,8 +37,8 @@ export default function ChatPanel() {
   const [inputValue, setInputValue] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
-
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
+  const [abortController, setAbortController] = useState<AbortController | null>(null);
 
   useEffect(() => {
     if (!isLoading && inputRef.current && !/Mobi|Android/i.test(navigator.userAgent)) {
@@ -85,8 +86,11 @@ export default function ChatPanel() {
     setMessages(prevMessages => [...prevMessages, { text: '', sender: 'bot' }]);
 
     try {
+      const controller = new AbortController();
+      setAbortController(controller);
+
       let responseText = '';
-      for await (const fragment of chat(newMessage.text, messages.map(m => m.text))) {
+      for await (const fragment of chat(newMessage.text, messages.map(m => m.text), controller.signal)) {
         responseText += fragment;
         // Update the latest 'bot' message with the new fragment
         setMessages(prevMessages => {
@@ -147,7 +151,11 @@ export default function ChatPanel() {
         onKeyPress={handleEnter}
       />
       {isLoading ? (
-        <button className="btn btn-error" onClick={() => setIsLoading(false)}><IoStop /></button>
+        <button className="btn btn-error" onClick={() => {
+          if (abortController)
+            abortController.abort();
+          setIsLoading(false);
+        }}><IoStop /></button>
       ) : (
         <button className="btn" onClick={sendMessage}><IoSend /></button>
       )}
