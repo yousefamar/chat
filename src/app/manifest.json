@@ -13,14 +13,14 @@
     "lifestyle",
     "utilities"
   ],
-  "screenshots":[
-  {
-    "src": "https://islamchat.deen.ai/screenshot.png",
-    "sizes": "750x1334",
-    "type": "image/png",
-    "description": "IslamChat Main Screen"
-  }
-],
+  "screenshots": [
+    {
+      "src": "https://islamchat.deen.ai/screenshot.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "description": "IslamChat Main Screen"
+    }
+  ],
   "icons": [
     {
       "src": "/favicon.ico",
