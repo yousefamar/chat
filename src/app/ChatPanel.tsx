@@ -40,10 +40,18 @@ export default function ChatPanel() {
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
-    if (!isLoading && inputRef.current) {
+    if (!isLoading && inputRef.current && !/Mobi|Android/i.test(navigator.userAgent)) {
       inputRef.current?.focus();
     }
   }, [isLoading]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      scrollToBottom();
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     if (!inputRef.current) return;
@@ -94,7 +102,6 @@ export default function ChatPanel() {
     } finally {
       setIsLoading(false);
       scrollToBottom();
-      document.querySelector('input')?.focus();
     }
   };
 
@@ -121,7 +128,7 @@ export default function ChatPanel() {
         </div>
         <div className="prose">
           <ReactMarkdown remarkPlugins={[remarkGfm]} className="message-text text-wrap">{message.text}</ReactMarkdown>
-        </div> 
+        </div>
       </div>)}
       {isLoading && <div className="flex items-center gap-2">
         <span className="loading loading-ring loading-sm"></span>
@@ -134,11 +141,11 @@ export default function ChatPanel() {
       <textarea
         ref={inputRef}
         placeholder="Type here"
-        className={`textarea resize-none textarea-bordered w-full overflow-hidden h-12`}
+        className={`textarea resize-none flex-grow textarea-bordered overflow-hidden h-12`}
         value={inputValue}
         onChange={handleInputChange}
         onKeyPress={handleEnter}
-        />
+      />
       {isLoading ? (
         <button className="btn btn-error" onClick={() => setIsLoading(false)}><IoStop /></button>
       ) : (
