@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    "background_color": "#3d736e",
+    "background_color": "#1f3837",
     "description": "AI chat trained on 15k IslamQA answers",
     "dir": "ltr",
     "display": "standalone",
@@ -11,7 +11,7 @@ export default function manifest(): MetadataRoute.Manifest {
     "scope": "/",
     "short_name": "IslamChat",
     "start_url": "/",
-    "theme_color": "#3d736e",
+    "theme_color": "#1f3837",
     "categories": [
       "lifestyle",
       "utilities"
