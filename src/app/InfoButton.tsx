@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { FaQuestion } from "react-icons/fa";
+import InstallButton from "./InstallButton";
 
 // props passed from outside
 export default function InfoButton(props: React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>) {
@@ -40,7 +41,9 @@ export default function InfoButton(props: React.DetailedHTMLProps<React.ButtonHT
         <h3>How does this work?</h3>
         <p><a href="https://islamqa.info/en" target="_blank">IslamQA </a> is an excellent resource but sometimes difficult to search and use. So we use AI to better search through IslamQA answers and then prime GPT-4-turbo to answer questions based on these results. With additional prompt engineering, this allows us to both surface IslamQA answers better, as well as prevent the AI from hallucinating innacurate answers. We are not affiliated with IslamQA.</p>
 
-        <h3>Privacy note</h3>
+        <InstallButton />
+
+        <h3 className="mt-4">Privacy note</h3>
         <p>IslamChat does not track you or collect any personal data. We do not currently store the questions or answers, but may do so in the future anonymously for the purpose of improving the model. OpenAI does not use this data for training their models at all. If you sign up to the mailing list, then <a href="https://convertkit.com/" target="_blank">ConvertKit</a> stores your email address. Your email address will never be shared with third parties and has no connection to questions you ask.</p>
 
         <h3>Who are you?</h3>
