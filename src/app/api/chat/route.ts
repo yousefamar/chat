@@ -72,7 +72,7 @@ export async function POST(request: Request) {
       // console.log(context);
       return {
         context,
-        question: `${input.originalQuestion}\n\nMessage translated: ${input.translatedQuestion}`,
+        question: `${input.originalQuestion}`,
       }
     },
     PromptTemplate.fromTemplate(ragPrompt),
