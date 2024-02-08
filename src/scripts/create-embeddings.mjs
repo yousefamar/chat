@@ -8,6 +8,8 @@ dotenv.config({
   path: '../../.env',
 });
 
+const lang = 'ar';
+
 const client = new MongoClient('mongodb+srv://islamqa:' + process.env.DB_PASS + '@amar.u9niace.mongodb.net');
 
 async function processFile(file, embeddings, collection) {
@@ -27,8 +29,8 @@ async function processFile(file, embeddings, collection) {
 
   let text = `### Question\n\n${content.question}\n\n\n### Answer\n\n${content.answer}`;
   // truncate to 32k characters
-  text = text.substring(0, 3000);
-  const metadata = { id: content.id, url: content.url, question: content.question, answer: content.answer };
+  text = text.substring(0, 9000);
+  const metadata = { id: content.id, url: content.url, question: content.question, answer: content.answer, lang };
 
   console.log(`Processing file: ${file}`);
   await MongoDBAtlasVectorSearch.fromTexts(
@@ -51,7 +53,7 @@ async function main() {
   console.log("Connected to MongoDB");
 
   const embeddings = new OpenAIEmbeddings();
-  const dir = 'islamqa';
+  const dir = 'data/islamqa-info-' + lang;
   const files = fs.readdirSync(dir);
 
   for (const file of files) {

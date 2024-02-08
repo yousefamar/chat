@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'IslamChat',
-  description: 'AI chat trained on 15k IslamQA answers',
+  description: 'AI chat trained on 45k IslamQA answers',
 }
 
 export const viewport: Viewport = {

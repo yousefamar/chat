@@ -1,0 +1,5 @@
+If the following question is in English, translate it to Arabic. If it's in Arabic, translate it to English.
+
+{question}
+
+Translation:

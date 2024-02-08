@@ -4,7 +4,8 @@ const fs = require('fs');
 const path = require('path');
 const xml2js = require('xml2js');
 
-const outputDir = 'islamqa';
+const lang = 'ar';// 'en';
+const outputDir = 'data/islamqa-info-' + lang;
 
 if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir);
@@ -12,7 +13,7 @@ if (!fs.existsSync(outputDir)) {
 
 async function fetchSitemap() {
     try {
-        const { data } = await axios.get('https://islamqa.info/sitemaps/sitemap-fatawa-en-1.xml');
+        const { data } = await axios.get(`https://islamqa.info/sitemaps/sitemap-fatawa-${lang}-1.xml`);
         return data;
     } catch (error) {
         console.error('Error fetching sitemap:', error);
@@ -23,7 +24,7 @@ async function extractURLs(sitemapXML) {
     try {
         const parsed = await xml2js.parseStringPromise(sitemapXML);
         const urls = parsed.urlset.url.map(urlEntry => urlEntry.loc[0]);
-        return urls.filter(url => url.includes('https://islamqa.info/en/answers/'));
+        return urls.filter(url => url.includes(`https://islamqa.info/${lang}/answers/`));
     } catch (error) {
         console.error('Error parsing sitemap XML:', error);
     }

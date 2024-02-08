@@ -136,7 +136,7 @@ export default function ChatPanel() {
       </div>)}
       {isLoading && <div className="flex items-center gap-2">
         <span className="loading loading-ring loading-sm"></span>
-        <p>Generating...</p>
+        <p>Thinking...</p>
       </div>}
       <div ref={endOfMessagesRef}></div>
     </div>

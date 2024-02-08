@@ -1,0 +1,8 @@
+Given the following conversation with an AI assistant, and a follow up message by the human user, rephrase the follow up message to contain any relevant context of the history in order to be a standalone message. If there is no chat history, the message should be left unchanged.
+
+Chat History:
+
+{history}
+
+Follow up message: {question}
+Standalone message:

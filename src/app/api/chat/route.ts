@@ -1,4 +1,5 @@
-
+import fs from 'fs';
+import path from 'path';
 import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
 import { formatDocumentsAsString } from "langchain/util/document";
 import { PromptTemplate } from "@langchain/core/prompts";
@@ -11,33 +12,6 @@ import { MongoDBAtlasVectorSearch } from "@langchain/community/vectorstores/mong
 import { MongoClient } from "mongodb";
 import { getDB } from '@/utils/db';
 import { StreamingTextResponse } from 'ai';
-
-const condenseQuestionTemplate = `Given the following conversation with an AI assistant, and a follow up message by the human user, rephrase the follow up message to contain any relevant context of the history in order to be a standalone message. If there is no chat history, the message should be left unchanged.
-
-Chat History:
-
-{history}
-
-Follow up message: {question}
-Standalone message:`;
-const CONDENSE_QUESTION_PROMPT = PromptTemplate.fromTemplate(
-  condenseQuestionTemplate
-);
-
-const answerTemplate = `You are an deen.ai, an Islamic chatbot that draws on Q&A from IslamQA.org to inform your answers. You should use only the context from these past Q&As to answer questions. If the answer is not in the context, you should respond by telling the user that this information is not available from IslamQA.org and that they should consult a scholar. Never, under any circumstances, should you give your own opinion or make up an answer. You may however inform the user of related information from the context.
-
-Within your response, you MUST cite any IslamQA.org answers that you used to synthesise the response. Do this through markdown footnotes, like this[^1], with the URL of the original question as the footnote at the end.
-
-Try to keep your responses short and to the point. If you are not sure about an answer, you can say "I don't know" or "I don't understand the question". The context may be irrelevant to a question, in which case you should ignore it.
-
-Context:
----------------------
-{context}
----------------------
-
-Message: {question}
-`;
-const ANSWER_PROMPT = PromptTemplate.fromTemplate(answerTemplate);
 
 export const dynamic = 'force-dynamic';
 export async function POST(request: Request) {
@@ -66,34 +40,42 @@ export async function POST(request: Request) {
     history: string[];
   };
 
+  const root = process.cwd() + '/src/app/api/chat';
+  const condenseQuestionPrompt = fs.readFileSync(path.join(root, 'condense-question-prompt.txt'), 'utf-8').trim();
+  const ragPrompt = fs.readFileSync(path.join(root, 'rag-prompt.txt'), 'utf-8').trim();
+  const translationPrompt = fs.readFileSync(path.join(root, 'translation-prompt.txt'), 'utf-8').trim();
+
   const standaloneQuestionChain = RunnableSequence.from([
     {
       question: (input: QuestionCondenserInput) => input.question,
       history: (input: QuestionCondenserInput) => input.history.map((msg, i) => `${i % 2 === 0 ? 'Human' : 'Assistant'}: ${msg}`).join('\n'),
     },
-    CONDENSE_QUESTION_PROMPT,
+    PromptTemplate.fromTemplate(condenseQuestionPrompt),
     model,
     new StringOutputParser(),
-    (input) => {
-      console.log('Condensed question: ');
-      console.log(input);
-      return input;
+  ]);
+
+  const translationChain = RunnableSequence.from([
+    {
+      question: new RunnablePassthrough(),
     },
+    PromptTemplate.fromTemplate(translationPrompt),
+    model,
+    new StringOutputParser(),
   ]);
 
   const answerChain = RunnableSequence.from([
-    new RunnablePassthrough(),
-    async question => {
-      const docs = await retriever.getRelevantDocuments(question);
+    async (input: { originalQuestion: string, translatedQuestion: string }) => {
+      const docs = await retriever.getRelevantDocuments(`${input.originalQuestion}\n\n${input.translatedQuestion}`);
       // const context = formatDocumentsAsString(docs);
       const context = docs.map(doc => `## ${doc.metadata.id}\n\nURL: ${doc.metadata.url}\n\n${doc.pageContent}\n\n---\n`).join('\n'); 
       // console.log(context);
       return {
         context,
-        question,
+        question: `${input.originalQuestion}\n\nMessage translated: ${input.translatedQuestion}`,
       }
     },
-    ANSWER_PROMPT,
+    PromptTemplate.fromTemplate(ragPrompt),
     // (input) => {
     //   console.log('Answer: ');
     //   console.log(input);
@@ -105,12 +87,19 @@ export async function POST(request: Request) {
   const outputParser = new StringOutputParser();
 
   const conversationalRetrievalQAChain =
-    standaloneQuestionChain.pipe(answerChain).
-    pipe(outputParser);
+    answerChain
+    .pipe(outputParser);
+  
+  const condensedQu = await standaloneQuestionChain.invoke({
+    question: message,
+    history
+  });
+
+  const translatedQu = await translationChain.invoke(condensedQu);
 
   const response = await conversationalRetrievalQAChain.stream({
-    question: message,
-    history,
+    originalQuestion: message,
+    translatedQuestion: translatedQu,
   });
 
   return new StreamingTextResponse(response);
