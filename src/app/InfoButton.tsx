@@ -39,7 +39,7 @@ export default function InfoButton(props: React.DetailedHTMLProps<React.ButtonHT
         <h2 className="mt-0">About</h2>
 
         <h3>How does this work?</h3>
-        <p><a href="https://islamqa.info/en" target="_blank">IslamQA </a> is an excellent resource but sometimes difficult to search and use. So we use AI to better search through IslamQA answers (15k English, 30k Arabic) and then prime GPT-4-turbo to answer questions based on these results. With additional prompt engineering, this allows us to both surface IslamQA answers better, as well as prevent the AI from hallucinating innacurate answers. We are not affiliated with IslamQA.</p>
+        <p><a href="https://islamqa.info/en" target="_blank">IslamQA </a> is an excellent resource but sometimes difficult to search and use. So we use AI to better search through IslamQA answers (15k English islamqa.info, 30k Arabic islamqa.info, 100k islamqa.org) and then prime GPT-4-turbo to answer questions based on these results. With additional prompt engineering, this allows us to both surface IslamQA answers better, as well as prevent the AI from hallucinating innacurate answers. We are not affiliated with IslamQA.</p>
 
         <InstallButton />
 
