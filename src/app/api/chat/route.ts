@@ -30,7 +30,7 @@ export async function POST(request: Request) {
   const retriever = vectorStore.asRetriever();
 
   const model = new ChatOpenAI({
-    modelName: "gpt-4-1106-preview",
+    modelName: "gpt-4-turbo-preview",
     streaming: true,
     maxTokens: -1,
   });
