@@ -12,6 +12,7 @@ import { MongoDBAtlasVectorSearch } from "@langchain/community/vectorstores/mong
 import { MongoClient } from "mongodb";
 import { getDB } from '@/utils/db';
 import { StreamingTextResponse } from 'ai';
+import { StringPromptValue } from 'langchain/prompts';
 
 export const dynamic = 'force-dynamic';
 export async function POST(request: Request) {
@@ -42,6 +43,7 @@ export async function POST(request: Request) {
 
   const root = process.cwd() + '/src/app/api/chat';
   const condenseQuestionPrompt = fs.readFileSync(path.join(root, 'condense-question-prompt.txt'), 'utf-8').trim();
+  const systemPrompt = fs.readFileSync(path.join(root, 'system-prompt.txt'), 'utf-8').trim();
   const ragPrompt = fs.readFileSync(path.join(root, 'rag-prompt.txt'), 'utf-8').trim();
   const translationPrompt = fs.readFileSync(path.join(root, 'translation-prompt.txt'), 'utf-8').trim();
 
@@ -81,6 +83,10 @@ export async function POST(request: Request) {
     //   console.log(input);
     //   return input;
     // },
+    async (input: StringPromptValue) => [
+      ['system', systemPrompt],
+      ['human', input.value],
+    ],
     model,
   ]);
 
