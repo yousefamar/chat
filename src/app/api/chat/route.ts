@@ -18,6 +18,8 @@ export const dynamic = 'force-dynamic';
 export async function POST(request: Request) {
   const { message, history } = await request.json();
 
+  return new Response("Sorry, I'm still offline!");
+
   const db = await getDB();
   const answersCollection = db.collection('answers');
 

@@ -33,7 +33,9 @@ export async function* chat(message: string, history?: string[], signal?: AbortS
 }
 
 export default function ChatPanel() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
+    { text: "Salaam! I'm going to be offline for a while as the cost to keep me alive is now in the hundreds of dollars per month. Please bear with me as [Yousef](mailto:yousef@deen.ai) takes some steps to optimise this.", sender: 'bot' },
+  ]);
   const [inputValue, setInputValue] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
