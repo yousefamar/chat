@@ -17,8 +17,6 @@ import { StringPromptValue } from 'langchain/prompts';
 import { JsonOutputParser } from '@langchain/core/output_parsers';
 import { log, error } from '@/utils/logging';
 
-const serviceAccount = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'service-account.json'), 'utf-8'));
-
 const safetySettings = [
   {
     category: "HARM_CATEGORY_HARASSMENT",
@@ -63,7 +61,9 @@ export async function POST(request: Request) {
   const model = new ChatVertexAI({
     model: "gemini-1.5-pro-001",
     // model: "claude-3-5-sonnet@20240620",
-    authOptions: { credentials: serviceAccount },
+    authOptions: {
+      keyFilename: './service-account.json',
+    },
     safetySettings,
   }) as any;
 
