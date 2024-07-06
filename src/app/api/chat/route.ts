@@ -15,6 +15,7 @@ import { getDB } from '@/utils/db';
 import { StreamingTextResponse } from 'ai';
 import { StringPromptValue } from 'langchain/prompts';
 import { JsonOutputParser } from '@langchain/core/output_parsers';
+import { log, error } from '@/utils/logging';
 
 const serviceAccount = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'service-account.json'), 'utf-8'));
 
@@ -123,18 +124,16 @@ export async function POST(request: Request) {
       // const context = formatDocumentsAsString(docs);
       const context = docs.map(doc => `## ${doc.metadata.id}\n\nURL: ${doc.metadata.url}\n\n${doc.pageContent}\n\n---\n`).join('\n'); 
 
-      // console.log('Answer: ');
-      // console.log(input);
-      // console.log(context);
+      log({
+        ...input,
+        context,
+      });
 
       const ragContext = await PromptTemplate.fromTemplate(ragPrompt).format({
         context: context,
       });
 
       const _history = history.map((msg: string, i: number) => [ i % 2 === 0 ? 'human' : 'assistant', msg ]);
-
-      // console.log('History: ');
-      // console.log(_history);
 
       return [
         ['system', systemPrompt + '\n\n' + ragContext],
