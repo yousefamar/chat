@@ -39,12 +39,12 @@ export default function InfoButton(props: React.DetailedHTMLProps<React.ButtonHT
         <h2 className="mt-0">About</h2>
 
         <h3>How does this work?</h3>
-        <p><a href="https://islamqa.info/en" target="_blank">IslamQA </a> is an excellent resource but sometimes difficult to search and use. So we use AI to better search through IslamQA answers (15k English islamqa.info, 30k Arabic islamqa.info, 100k islamqa.org) and then prime GPT-4-turbo to answer questions based on these results. With additional prompt engineering, this allows us to both surface IslamQA answers better, as well as prevent the AI from hallucinating innacurate answers. We are not affiliated with IslamQA.</p>
+        <p><a href="https://islamqa.info/en" target="_blank">IslamQA </a> is an excellent resource but sometimes difficult to search and use. So we use AI to better search through IslamQA answers (15k English islamqa.info, 30k Arabic islamqa.info, 100k islamqa.org) and then prime Gemini to answer questions based on these results. With additional prompt engineering, this allows us to both surface IslamQA answers better, as well as prevent the AI from hallucinating innacurate answers. We are not affiliated with IslamQA.</p>
 
         <InstallButton />
 
         <h3 className="mt-4">Privacy note</h3>
-        <p>IslamChat does not track you or collect any personal data. We do not currently store the questions or answers, but may do so in the future anonymously for the purpose of improving the model. OpenAI does not use this data for training their models at all. If you sign up to the mailing list, then <a href="https://convertkit.com/" target="_blank">ConvertKit</a> stores your email address. Your email address will never be shared with third parties and has no connection to questions you ask.</p>
+        <p>IslamChat does not track you or collect any personal data. We anonymously store questions and answers for the purpose of improving the model. Gemini does not use this data for training their models at all. If you sign up to the mailing list, then <a href="https://convertkit.com/" target="_blank">ConvertKit</a> stores your email address. Your email address will never be shared with third parties and has no connection to questions you ask.</p>
 
         <h3>Who are you?</h3>
         <p>IslamChat was conceived and developed by <a href="https://yousefamar.com" target="_blank">Yousef</a> and <a href="https://www.linkedin.com/in/rafihberkane/" target="_blank">Rafih</a> as an evolution of <a href="https://old.deen.ai">old.deen.ai</a>. Our mission is to leverage tech to empower all Muslims. Feel free to email us at any time through <a href="mailto:salam@deen.ai?subject=Salam!&body=Salam%20Yousef%2C%0D%0A%0D%0A" target="_blank">salam@deen.ai</a>. If you are interested in the intersection between Islam and AI, join our WhatsApp group with many likeminded Muslims, and stay up to date on similar projects through our mailing list:</p>
